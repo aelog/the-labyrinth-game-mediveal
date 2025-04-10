@@ -40,66 +40,89 @@ namespace WalkGame{
                         string btw_code = "";
 
                         work_symbol = card[l, n];
-                        btw_code += Convert.ToString(work_symbol % 2);
-                        work_symbol = work_symbol / 2;
 
-                        string add_zero = ""; // Need for making a 4-bit symbol coding
+                        switch (work_symbol){
 
-                        if (Convert.ToInt32(btw_code) < 1000){
+                            default:
+                                btw_code += Convert.ToString(work_symbol);
+                                break;
 
-                            add_zero += "0";
+                            case 10:
+                                btw_code += "A";
+                                break;
+
+                            case 11:
+                                btw_code += "B";
+                                break;
+
+                            case 12:
+                                btw_code += "C";
+                                break;
+
+                            case 13:
+                                btw_code += "D";
+                                break;
                         }
-                        if (Convert.ToInt32(btw_code) < 100){
-
-                            add_zero += "0";
-                        }
-                        if (Convert.ToInt32(btw_code) < 10){
-
-                            add_zero += "0";
-                        }
-
-                        btw_code = add_zero + btw_code;
-                        out_code += btw_code;                
+                        out_code += btw_code;
                     }
                 }
 
+                Console.WriteLine("\n");
                 Console.WriteLine("There is a code of your map: ");
                 Console.WriteLine(out_code);
-                Console.ReadLine();
+                Console.ReadKey();
             }
 
-        public static void DecryptMap(){ // This method decrypts user saved maps(Doesn't work!!! Problem: IndexOutOfRange)
+        public static void DecryptMap(){ // This method decrypts user saved maps
 
             Console.Clear();
 
             Console.WriteLine("Please write a code: ");
             int[,] out_map = new int[9, 9]; // Making an empty map
-            int out_decode = 0;
             string code = Console.ReadLine();
 
-            if (code == "") {
-                Console.WriteLine("Code cannot be empty.");
+            if (code == "x"){
+
+                Walker.Menu();
+                return;
+            }
+            else if (code == "" || code.Length != 81) {
+                Console.WriteLine("Code cannot be empty or be less/more than 81 symbols.");
+                DecryptMap();
                 return;
             }
 
-            int codeIndex = code.Length - 1;
+            int z = 0;
+
             for (int y = 0; y < 9; y++) {
                 for (int x = 0; x < 9; x++) {
-                    if (codeIndex < 0) {
-                
-                        out_map[y, x] = 0; 
+                    string out_symbol = Convert.ToString(code[z]);
+                    int out_num = 0;
+                    
+                    switch (out_symbol){
+
+                        case "A":
+                            out_num = 10;
+                            break;
+
+                        case "B":
+                            out_num = 11;
+                            break;
+
+                        case "C":
+                            out_num = 12;
+                            break;
+
+                        case "D":
+                            out_num = 13;
+                            break;
+
+                        default:
+                            out_num = Convert.ToInt32(out_symbol);
+                            break;
                     }
-                    else {
-                        out_decode = 0;
-                        for (int i = 0; i < 4 && codeIndex >= 0; i++) { 
-                            if (code[codeIndex] == '1') { 
-                                out_decode += (int)Math.Pow(2, i); 
-                            }
-                            codeIndex--;
-                        }
-                        
-                        out_map[y, x] = out_decode;
-                    }
+                    out_map[y, x] = out_num;
+                    z++;
                 }
             }
 
@@ -124,14 +147,18 @@ namespace WalkGame{
         public static bool enemyKilled = false;
         public static bool died = false;
         public static bool doorNotOpened = false;
+        public static bool debug = false;
+        public static bool isUserMap = false;
         
         public static int player_x = -1;
         public static int player_y = -1;
         public static int health = 10;
         public static int hungry = 10;
+        public static int current_level = 1;
         public static string[] elems = new string[] {"   ", "███", "=D ", " ╡╞", " Ω ", "End", "└─┘", ">=P", "|+|", "^^^", " / ", "╓─█", "III", "???"};
         public static string[] things = new string[] {"... - nothing", " ╡╞ - sword", "╓─▌ - key", "III - bridge"};
         public static int[,] user_map = new int[9, 9];
+        public static int[,] code_map = new int[9, 9];
         public static int new_x;
         public static int old_x;
         public static int new_y;
@@ -140,22 +167,106 @@ namespace WalkGame{
         public static string thing_type = "";
         public static int score = 0;
 
-        public static void MapMaker(){ 
+        public static void LevelSelect(){
+            
+            string [] ls_Buttons = {"l1", "l2", "l3"};
+            string [] ls_Choosed_buttons = {"L1", "L2", "L3"};
+            string [] ls_Work_buttons = {"l1", "l2", "l3"};
+
+            int x = 0;
+            while (working == true){
+
+                Console.Clear();
+
+                ls_Work_buttons[x] = ls_Choosed_buttons[x];
+                Console.WriteLine("=======================================================================================================");
+                Console.WriteLine("|                                                                                                     |");
+                Console.WriteLine("|                                    Welcome to Level Select!                                         |");
+                Console.WriteLine("|                                                                                                     |");
+                Console.WriteLine("=======================================================================================================");
+                Console.WriteLine("|          |         |         |         |         |         |         |         |         |          |");
+                Console.WriteLine("|    " + ls_Work_buttons[0] + "    |    " + ls_Work_buttons[1] + "   |    " + ls_Work_buttons[2] + "   |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ??    |");
+                Console.WriteLine("|          |         |         |         |         |         |         |         |         |          |");
+                Console.WriteLine("=======================================================================================================");
+                Console.WriteLine("|          |         |         |         |         |         |         |         |         |          |");
+                Console.WriteLine("|    ??    |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ??    |");
+                Console.WriteLine("|          |         |         |         |         |         |         |         |         |          |");
+                Console.WriteLine("=======================================================================================================");
+                Console.WriteLine("|          |         |         |         |         |         |         |         |         |          |");
+                Console.WriteLine("|    ??    |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ??    |");
+                Console.WriteLine("|          |         |         |         |         |         |         |         |         |          |");
+                Console.WriteLine("=======================================================================================================");
+                Console.WriteLine("|          |         |         |         |         |         |         |         |         |          |");
+                Console.WriteLine("|    ??    |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ?    |    ??    |");
+                Console.WriteLine("=======================================================================================================");
+                string choose = Convert.ToString(Console.ReadKey().KeyChar);
+                ls_Work_buttons[x] = ls_Buttons[x];
+
+                switch (choose){
+
+                    case "a":
+                        x--;
+                        if (x < 0){
+
+                            x = 2;
+                        }
+                        break;
+
+                    case "d":
+                        x++;
+                        if (x > 2){
+
+                            x = 0;
+                        }
+                        break;
+
+                    case "e":
+                        current_level = x + 1;
+                        Levels(x, true);
+                        Gameplay();
+                        break;
+
+                    case "x":
+                        Menu();
+                        break;
+                }
+            }
+        }
+
+        public static void MapMaker(){ // Map Creator method
 
             Console.Clear();
             Console.WriteLine("Make a level by symbols: ");
-            int stroka_num = 1; 
+            Console.WriteLine("       ABCDEFGHI");
+            Console.WriteLine("       |||||||||");
+            int stroka_num = 1; // Sorry for russian words I didn't know how to call this variable
 
             for (int l = 0; l != 9; l++){
 
                 string symvol = ""; // Need for symbol check
                 string user_wall = "";
                 int out_symvol = 0;
+                bool lessnine = false;
 
                 Console.Write(stroka_num + " :>>> ");
                 user_wall = Console.ReadLine();
 
+                if (user_wall.Length < 9){
+
+                    Console.WriteLine("Last string has got less than 9 symbols. In won't be used!");
+                }
+                else if (user_wall.Length > 9){
+
+                    Console.WriteLine("WARNING: Last string has got more than 9 symbols. 10th, 11th, 12th, etc. symbols are not be included in the level.");
+                }
+
                 for (int n = 0; n != 9; n++){
+
+                    if (user_wall.Length < 9){
+
+                        lessnine = true;
+                        continue;
+                    }
 
                     symvol = Convert.ToString(user_wall[n]);
 
@@ -184,15 +295,21 @@ namespace WalkGame{
 
                     user_map[l, n] = out_symvol;
                 }
-
-                stroka_num += 1;
+                if (lessnine == false){
+                    stroka_num += 1;
+                }
+                else{
+                    l--;
+                }
             }
 
             map = user_map;
+            isUserMap = true;
+            code_map = (int[,])user_map.Clone();
             Gameplay();
         }
 
-        public static void Move(string new_move){
+        public static void Move(string new_move){ //This method checks moves of the player
 
             switch (new_move){
 
@@ -289,153 +406,159 @@ namespace WalkGame{
                     died = true;
                 }
 
-                if (map[new_y, new_x] == 3){ // Get sword
+                int new_location = map[new_y, new_x];
 
-                    thingTaken = true;
-                    thing_type = "sword";
-                    for (int q = 0; q < 3; q++){
+                switch (new_location){
 
-                        if (inventory[q] == 0){ // Inventory check
+                    case 3: // Get sword
 
-                            inventory[q] = 1;
-                            break;
-                        }
-                    }
-                }
+                        thingTaken = true;
+                        thing_type = "sword";
+                        for (int q = 0; q < 3; q++){
 
-                else if (map[new_y, new_x] == 5){ // Finish check
+                            if (inventory[q] == 0){ // Inventory check
 
-                    won = true;
-                }
-
-                else if (map[new_y, new_x] == 6){ // Bowl check
-
-                    hungry++;
-                    eatFood = true;
-                }
-
-                else if(map[new_y, new_x] == 7){ // Enemy check
-
-                    int tries = 0;
-
-                    for (int q = 0; q != 3; q++){
-
-                        if (inventory[q] == 1){ // Inventory check
-
-                            enemyKilled = true;
-                            inventory[q] = 0;
-                            break;
-                        }
-                        else{
-
-                            tries++;
-                            if (tries == 3){
-
-                                health -= 3;
-                                tries = 0;
+                                inventory[q] = 1;
                                 break;
                             }
                         }
-                    }
+                        break;
 
-                    tries = 0;
-                }
+                    case 5: // Finish check
 
-                else if(map[new_y, new_x] == 8){ // Health box check
+                        won = true;
+                        break;
 
-                    health++;
-                }
+                    case 6: // Bowl check
 
-                else if(map[new_y, new_x] == 9){ // Spikes check
+                        hungry++;
+                        eatFood = true;
+                        break;
 
-                    int sp_tries = 0;
+                    case 7: // Enemy check
 
-                    for (int q = 0; q != 3; q++){
+                        int tries = 0;
 
-                        if (inventory[q] == 3){ // Inventory check
+                        for (int q = 0; q != 3; q++){
 
-                            inventory[q] = 0;
-                            break;
+                            if (inventory[q] == 1){ // Inventory check
+
+                                enemyKilled = true;
+                                inventory[q] = 0;
+                                break;
+                            }
+                            else{
+
+                                tries++;
+                                if (tries == 3){
+
+                                    health -= 3;
+                                    tries = 0;
+                                    break;
+                                }
+                            }
                         }
-                        else{
 
-                            sp_tries++;
-                            if (sp_tries == 3){
+                        tries = 0;
+                        break;
+                        
 
-                                health -= 3;
+                    case 8: // Health box check
+
+                        health++;
+                        break;
+
+                    case 9: // Spikes check
+
+                        int sp_tries = 0;
+
+                        for (int q = 0; q != 3; q++){
+
+                            if (inventory[q] == 3){ // Inventory check
+
+                                inventory[q] = 0;
+                                break;
+                            }
+                            else{
+
+                                sp_tries++;
+                                if (sp_tries == 3){
+
+                                    health -= 3;
+                                    break;
+                                }
+                            }
+                        }
+
+                        sp_tries = 0;
+                        break;
+
+                    case 11: // Get key
+
+                        thingTaken = true;
+                        thing_type = "key";
+                        for (int q = 0; q < 3; q++){
+
+                            if (inventory[q] == 0){ // Inventory check
+
+                                inventory[q] = 2;
                                 break;
                             }
                         }
-                    }
+                        break;
 
-                    sp_tries = 0;
-                }
+                    case 12: // Get bridge
 
-                else if (map[new_y, new_x] == 11){ // Get key
+                        thingTaken = true;
+                        thing_type = "bridge";
+                        for (int q = 0; q < 3; q++){
 
-                    thingTaken = true;
-                    thing_type = "key";
-                    for (int q = 0; q < 3; q++){
+                            if (inventory[q] == 0){ // Inventory check
 
-                        if (inventory[q] == 0){ // Inventory check
-
-                            inventory[q] = 2;
-                            break;
+                                inventory[q] = 3;
+                                break;
+                            }
                         }
-                    }
-                }
+                        break;
 
-                else if (map[new_y, new_x] == 12){ // Get bridge
+                    case 13: // Get ???
+                        Random rnd = new Random();
+                        int rthing = rnd.Next(0, 4);
+                        int out_r = 0;
+                        thingTaken = true;
+                        switch (rthing){
 
-                    thingTaken = true;
-                    thing_type = "bridge";
-                    for (int q = 0; q < 3; q++){
+                            case 0:
+                                thing_type = "nothing";
+                                break;
 
-                        if (inventory[q] == 0){ // Inventory check
+                            case 1:
+                                thing_type = "sword";
+                                out_r = 1;
+                                break;
 
-                            inventory[q] = 3;
-                            break;
+                            case 2:
+                                thing_type = "key";
+                                out_r = 2;
+                                break;
+
+                            case 3:
+                                thing_type = "bridge";
+                                out_r = 3;
+                                break;
+
                         }
-                    }
-                }
 
-                else if (map[new_y, new_x] == 13){ // Get ???
-                    Random rnd = new Random();
-                    int rthing = rnd.Next(0, 4);
-                    int out_r = 0;
-                    thingTaken = true;
-                    switch (rthing){
+                        for (int q = 0; q < 3; q++){
 
-                        case 0:
-                            thing_type = "nothing";
-                            break;
+                            if (inventory[q] == 0){ // Inventory check
 
-                        case 1:
-                            thing_type = "sword";
-                            out_r = 1;
-                            break;
-
-                        case 2:
-                            thing_type = "key";
-                            out_r = 2;
-                            break;
-
-                        case 3:
-                            thing_type = "bridge";
-                            out_r = 3;
-                            break;
-
-                    }
-
-                    for (int q = 0; q < 3; q++){
-
-                        if (inventory[q] == 0){ // Inventory check
-
-                            inventory[q] = out_r;
-                            break;
+                                inventory[q] = out_r;
+                                break;
+                            }
                         }
+                        break;
                     }
-                }
                 
                 map[old_y, old_x] = 0;
                 map[new_y, new_x] = 2;
@@ -555,8 +678,8 @@ namespace WalkGame{
 
             Console.Clear();
 
-            string health_spaces = "                                                                                          ";
-            string hungry_spaces = "                                                                                         ";
+            string health_spaces = "                                                                                         ";
+            string hungry_spaces = "                                                                                          ";
             if (health < 10){
 
                 health_spaces += " ";
@@ -605,7 +728,7 @@ namespace WalkGame{
                 Console.WriteLine("| Press any key to start level(x to back to menu)                                                     |");
                 Console.WriteLine("|                                                                                                     |");
                 Console.WriteLine("=======================================================================================================");
-                string exit = Console.ReadLine();
+                string exit =Convert.ToString(Console.ReadKey().KeyChar);
                 if (exit == "x"){
 
                     Menu();
@@ -626,6 +749,7 @@ namespace WalkGame{
 
             int menu_x = 0;
             int menu_y = 0;
+            int easter = 0;
 
             while (working == true){
 
@@ -693,7 +817,33 @@ namespace WalkGame{
                             menu_x = 0;
                         }
                         break;
-                        
+
+                    case "k":
+                        if (easter == 0){
+
+                            easter++;
+                        }
+                        else if (easter == 3){
+
+                            debug = true;
+                            LevelSelect();
+                        }
+                        break;
+                    
+                    case "i":
+                        if (easter == 1){
+
+                            easter++;
+                        }
+                        break;
+                    
+                    case "c":
+                        if (easter == 2){
+
+                            easter++;
+                        }
+                        break;
+
                     case "e":
                         int count_menu_y = menu_y * 2;
                         int count_menu = menu_x + count_menu_y;
@@ -791,7 +941,6 @@ namespace WalkGame{
 
             Console.Clear();
 
-            int current_level = 1;
             hungry = 10;
 
             while (working == true){
@@ -930,17 +1079,18 @@ namespace WalkGame{
 
                     Console.WriteLine("You completed " + current_level.ToString() + " level!");
                     Thread.Sleep(1000);
-                    if (map == user_map){
+                    if (isUserMap){
 
                         Console.Write("Would you like to save your level? (y/n): ");
-                        string question = Console.ReadLine();
+                        string question = Convert.ToString(Console.ReadKey().KeyChar);
                         if (question == "y"){
 
-                            Save.Map(user_map);
+                            Save.Map(code_map);
                         }
                         
                         Levels(0, false);
                         inventory = new int[] {0, 0, 0};
+                        isUserMap = false;
                         won = false;
                         Menu();
                     }
