@@ -75,6 +75,8 @@ namespace WalkGame{
 
         public static void DecryptMap(){ // This method decrypts user saved maps
 
+            string[] nummas = new string[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
             Console.Clear();
 
             Console.WriteLine("Please write a code: ");
@@ -118,7 +120,14 @@ namespace WalkGame{
                             break;
 
                         default:
-                            out_num = Convert.ToInt32(out_symbol);
+                            if (Walker.Contains(nummas, out_symbol)){
+
+                                out_num = Convert.ToInt32(out_symbol);
+                            }
+                            else{
+
+                                out_num = 0;
+                            }
                             break;
                     }
                     out_map[y, x] = out_num;
@@ -166,6 +175,22 @@ namespace WalkGame{
         public static int steps = 0;
         public static string thing_type = "";
         public static int score = 0;
+
+        public static bool Contains(string[] massive, string element){ // Check if element contains in massive
+
+            bool isCont = false;
+
+            foreach (var m_elem in massive){
+
+                if (element == m_elem){
+
+                    isCont = true;
+                    break;
+                }
+            }
+
+            return isCont;
+        }
 
         public static void LevelSelect(){
             
@@ -235,6 +260,8 @@ namespace WalkGame{
 
         public static void MapMaker(){ // Map Creator method
 
+            string[] nummas = new string[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
             Console.Clear();
             Console.WriteLine("Make a level by symbols: ");
             Console.WriteLine("       ABCDEFGHI");
@@ -273,7 +300,14 @@ namespace WalkGame{
                     switch (symvol){
 
                         default:
-                            out_symvol = Convert.ToInt32(symvol);
+                            if (Contains(nummas, symvol)){
+
+                                out_symvol = Convert.ToInt32(symvol);
+                            }
+                            else{
+
+                                out_symvol = 0;
+                            }
                             break;
 
                         case "A":
@@ -873,17 +907,19 @@ namespace WalkGame{
                                 Console.WriteLine("|                                                                                                     |");
                                 Console.WriteLine("=======================================================================================================");
                                 Console.WriteLine("|                                                                                                     |");
-                                Console.WriteLine("|                                              L. Load Map(DOESN'T WORK!!!)                           |");
+                                Console.WriteLine("|                                              L. Load Map                                            |");
                                 Console.WriteLine("| Any key to back to menu                                                                             |");
                                 Console.WriteLine("=======================================================================================================");
                                 choose = Convert.ToString(Console.ReadKey().KeyChar);
-                                if (choose == "n"){
+                                switch (choose){
 
-                                    MapMaker();
-                                } 
-                                else if (choose == "l"){
-
-                                    Save.DecryptMap();
+                                    case "n":
+                                        MapMaker();
+                                        break;
+                                
+                                    case "l":
+                                        Save.DecryptMap();
+                                        break;
                                 }
                                 break;
 
