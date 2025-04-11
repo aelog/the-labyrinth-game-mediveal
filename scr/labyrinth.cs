@@ -156,7 +156,6 @@ namespace WalkGame{
         public static bool enemyKilled = false;
         public static bool died = false;
         public static bool doorNotOpened = false;
-        public static bool debug = false;
         public static bool isUserMap = false;
         
         public static int player_x = -1;
@@ -712,8 +711,8 @@ namespace WalkGame{
 
             Console.Clear();
 
-            string health_spaces = "                                                                                         ";
-            string hungry_spaces = "                                                                                          ";
+            string health_spaces = "                                                                                          ";
+            string hungry_spaces = "                                                                                         ";
             if (health < 10){
 
                 health_spaces += " ";
@@ -859,7 +858,6 @@ namespace WalkGame{
                         }
                         else if (easter == 3){
 
-                            debug = true;
                             LevelSelect();
                         }
                         break;
