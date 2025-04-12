@@ -29,6 +29,8 @@
    **^^^** - These are **spikes**. You'll fall to them, if you don't have a bridge. And yeah, it is - III.
    
    **╓─▌**, ***/*** - These are **key** and **lock**. Lock locks ways, key opens ways.
+
+   **0** - This is a <s>zero</s> **teleport**. If you walk to it, you will be transfered to another place on the level.
    
    ![](photos/lab3.PNG)
 
