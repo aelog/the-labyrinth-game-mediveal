@@ -163,10 +163,12 @@ namespace WalkGame{
         public static int health = 10;
         public static int hungry = 10;
         public static int current_level = 1;
-        public static string[] elems = new string[] {"   ", "███", "=D ", " ╡╞", " Ω ", "End", "└─┘", ">=P", "|+|", "^^^", " / ", "╓─█", "III", "???"};
+        public static string[] elems = new string[] {"   ", "███", "=D ", " ╡╞", " 0 ", "End", "└─┘", ">=P", "|+|", "^^^", " / ", "╓─█", "III", "???"};
         public static string[] things = new string[] {"... - nothing", " ╡╞ - sword", "╓─▌ - key", "III - bridge"};
         public static int[,] user_map = new int[9, 9];
         public static int[,] code_map = new int[9, 9];
+        public static int[] teleport1 = new int[2];
+        public static int[] teleport2 = new int[2];
         public static int new_x;
         public static int old_x;
         public static int new_y;
@@ -457,6 +459,22 @@ namespace WalkGame{
                         }
                         break;
 
+                    case 4:
+
+                        int[] now_location = new int[] {new_y, new_x};
+                        
+                        if (now_location == teleport1){
+
+                            new_y = teleport1[0];
+                            new_x = teleport1[1];
+                        }
+                        else{
+
+                            new_y = teleport2[0];
+                            new_x = teleport2[1];
+                        }
+                        break;
+
                     case 5: // Finish check
 
                         won = true;
@@ -610,7 +628,7 @@ namespace WalkGame{
             Console.WriteLine("|  ╡╞ - This is a sword. By this thing you can kill your enemies but it will dissapeas after one use. |");
             Console.WriteLine("|  End - This is the end of the labyrinth. After you'll go there you will go to the next level.       |");
             Console.WriteLine("|  └─┘ - This is the bowl. If you will take it, you won't be hungry!                                  |");
-            Console.WriteLine("|   Ω - This is a teleport. If you walk to it, you will be transfered to another place on the level.  |");
+            Console.WriteLine("|   0 - This is a teleport. If you walk to it, you will be transfered to another place on the level.  |");
             Console.WriteLine("|  |+| - This is a medicine box. Take it, and you'll get +1 Health.                                   |");
             Console.WriteLine("|  ^^^ - These are spikes. You'll fall to them, if you don't have a bridge. And yeah, it is - III.     |");
             Console.WriteLine("|  ╓─▌, / - These are key and lock. Lock locks ways, key opens ways.                                  |");
@@ -950,6 +968,17 @@ namespace WalkGame{
 
                         player_x = x;
                         player_y = y;
+                    }
+                    else if (need_elem == 4){
+
+                        if (teleport1 == new int[2]){
+
+                            teleport1 = new int[] {y, x};
+                        }
+                        else{
+
+                            teleport2 = new int[] {y, x};
+                        }
                     }
                     string elem_out = elems[need_elem];
                     wall += elem_out;
